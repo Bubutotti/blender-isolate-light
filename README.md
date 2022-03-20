@@ -1,8 +1,8 @@
 # blender-isolate-light
-A Blender addon to toggle visibility of all lights but the active one.
+A Blender addon to toggle the visibility of unselected lights.
 
 # Installation
-Go to **Edit > Preferences**. At the addons tab click Install, select **isolate-light.py** and enable the addon.
+Go to **Edit > Preferences**. In the addons tab click Install, select **isolate-light.py** and enable the addon.
 
 # Usage
-With an active light, select **Object > Isolate Light**. A default hotkey is yet to be added.
+With the lights to isolate selected, go to **Object > Isolate Light**. A default hotkey is yet to be added.
