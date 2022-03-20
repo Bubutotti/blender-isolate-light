@@ -2,9 +2,9 @@ bl_info = {
     "name": "Isolate Light",
     "blender": (2, 80, 0),
     "category": "Lighting",
-    "description": "Toggles light isolation",
+    "description": "Toggles unselected lights visibility",
     "author": "Bubu",
-    "version": (0, 1, 0),
+    "version": (0, 2, 0),
 }
 
 import bpy
@@ -14,25 +14,26 @@ class IsolateLight(bpy.types.Operator):
     bl_idname = "object.isolate_light"
     bl_label = "Isolate Light"
     bl_options = {'REGISTER', 'UNDO'}
-
-
+    
+    selection = []
     def execute(self, context):
-        
-        # The original script
-        visible = True
-        for i in bpy.context.scene.objects:
-            if i.hide_viewport == True:
-                visible = False
-                break
-        if visible == True:
-            for i in bpy.context.scene.objects:
-                if i.type == 'LIGHT' and i != bpy.context.object:
-                    i.hide_viewport = True
+        if self.selection == []: # Nothing is hidden
+            for object in context.scene.objects:
+                if object.type == 'LIGHT':
+                    self.selection.append(object)
+            for object in context.selected_objects:
+                if object.type == 'LIGHT':
+                    self.selection.remove(object)
+            for object in self.selection:
+                if object.hide_viewport == True: # Prevents conflict with manually hidden objects
+                    self.selection.remove(object)
+            for object in self.selection:
+                object.hide_viewport = True
         else:
-            for i in bpy.context.scene.objects:
-                if i.type == 'LIGHT':
-                    i.hide_viewport = False
-
+            for object in self.selection:
+                object.hide_viewport = False
+            self.selection.clear()
+        
         return {'FINISHED'}
 
     def draw(self, context):
