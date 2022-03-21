@@ -1,4 +1,4 @@
-# blender-isolate-light
+# blender-isolate-lights
 A Blender addon to toggle the visibility of unselected lights.
 
 # Installation
