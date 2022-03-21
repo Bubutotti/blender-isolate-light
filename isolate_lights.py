@@ -18,7 +18,7 @@ class IsolateLights(bpy.types.Operator):
     selection = []
     def execute(self, context):
         selection = self.selection
-        if selection == []: # Nothing is hidden
+        if not selection: # Nothing is hidden
             lights = [x for x in context.scene.objects if x.type == 'LIGHT']
             for obj in lights:
                 if not obj in context.selected_objects and not obj.hide_viewport:
