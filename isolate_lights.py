@@ -9,28 +9,33 @@ bl_info = {
 
 import bpy
 
+
 class IsolateLights(bpy.types.Operator):
     """Isolates selected lights"""
+
     bl_idname = "object.isolate_lights"
     bl_label = "Isolate Lights"
-    bl_options = {'REGISTER', 'UNDO'}
-    
-    selection = []
+    bl_options = {"REGISTER", "UNDO"}
+
+    selection = {}
+
     def execute(self, context):
-        selection = self.selection
-        if not selection: # Nothing is hidden
-            lights = [x for x in context.scene.objects if x.type == 'LIGHT']
-            for obj in lights:
-                if not obj in context.selected_objects and not obj.hide_viewport:
-                    selection.append(obj)
-            for obj in selection:
-                obj.hide_viewport = True
+        if not self.selection:
+            all_lights = set(filter(lambda x: x.type == "LIGHT", context.scene.objects))
+            selected_lights = set(filter(lambda x: x.type == "LIGHT", context.selected_objects))
+            hidden_lights = set(filter(lambda x: x.hide_viewport == True, context.scene.objects))
+            
+            IsolateLights.selection = selected_lights ^ all_lights ^ hidden_lights
+            
+            for i in self.selection:
+                i.hide_viewport = True
         else:
-            for obj in selection:
-                obj.hide_viewport = False
-            selection.clear()
-        
-        return {'FINISHED'}
+            for i in self.selection:
+                i.hide_viewport = False
+            IsolateLights.selection = {}
+
+        return {"FINISHED"}
+
 
     def draw(self, context):
         self.layout.operator("object.isolate_lights")
